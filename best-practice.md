@@ -1,29 +1,32 @@
 
 # CityJSON & OGC API -- Features (aka WFS3)
 
-Here are some thoughts on making CityJSON "work" with [WFS3](docs.opengeospatial.org/is/17-069r3/17-069r3.html).
-[GitHub repo for all matters WFS3](https://github.com/opengeospatial/ogcapi-features)
+Here are some thoughts on making CityJSON "work" with [WFS3](docs.opengeospatial.org/is/17-069r3/17-069r3.html) ([GitHub repo for all matters WFS3](https://github.com/opengeospatial/ogcapi-features)).
 
-
-The most common criticism related to CityJSON is "yeah but cannot *stream* CityJSON and WFS is impossible, look at the global list of vertices".
+The most common criticism related to CityJSON is "yeah but we cannot *stream* CityJSON and WFS is impossible, look at the global list of vertices! Look at it!".
 This assumes that everyone is streaming CityGML; no they are not.
 
 
 ## What WFS3 (currently) is
 
 - for 2D geometries only, explicitly stated
+- only for Simple Features, without textures/material
 - only one geometry per feature
-- for SF features, without textures/material
-- GeoJSON is the recommended format, along with HTML. "GML if you want" is almost said, but you feel that it's discouraged.
+- GeoJSON is the recommended format, along with HTML (webpage with map and some nice info to click). "GML if you want" is almost said, but you feel that it's discouraged.
 - no support for structured metadata, there can be a link to an arbitray HTML page
 - CRS must be WGS84
 
 So CityJSON doesn't fit with the above, but to fair neither does CityGML-XML.
-This is little to do with the list of vertices in my opinion.
+This has little to do with the list of vertices in my opinion.
+
 This is rather easy to solve, as I show below.
+WFS3 doesn't prescribe the format, just the API.
+We can build the API for CityJSON as below, and it would be WFS3-compliant.
+
 
 
 ## A proposal to make CityJSON WFS3-compliant
+
 
 ### What is a FeatureCollection?
 
@@ -64,10 +67,11 @@ This is up to discussion.
 }
 ```
 
+### API examples
 
-/collections/ -> HTML/JSON of all datasets
-/collections/{mycollection}/ -> overview of dataset (metadata [bbox, CRS], version CityJSON, extensions)
-/collections/{mycollection}/items/{myid}/ -> one CityJSONFeature
+1. /collections/ -> HTML/JSON of all datasets
+1. /collections/{mycollection}/ -> overview of dataset (metadata [bbox, CRS], version CityJSON, extensions)
+1. /collections/{mycollection}/items/{myid}/ -> one CityJSONFeature
 
 If many Features must be returned, like all objects inside a bbox, then a CityJSON is returned.
 
