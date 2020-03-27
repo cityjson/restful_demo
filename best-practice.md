@@ -71,9 +71,10 @@ This is up to discussion.
 
 1. `/collections/` -> HTML/JSON of all datasets
 1. `/collections/{mycollection}/` -> overview of dataset (metadata [bbox, CRS], version CityJSON, extensions)
+1. `/collections/{mycollection}/items/` -> a CityJSON object
 1. `/collections/{mycollection}/items/{myid}/` -> one CityJSONFeature
 
-If many Features must be returned, like all objects inside a bbox, then a CityJSON is returned.
+If many Features must be returned, like all objects inside a bbox, then a CityJSON is returned (equivalent to a FeatureCollection.
 
 
 ### Streaming
