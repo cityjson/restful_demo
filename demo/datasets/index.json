@@ -1,0 +1,14 @@
+{
+  "collections": [
+    {
+      "title": "Part of open dataset of The Hague; buildings+terrain", 
+      "id": "denhaag", 
+      "itemType": "feature"
+    }, 
+    {
+      "title": "Sample dataset part of Delft (from 3dfier)", 
+      "id": "delft", 
+      "itemType": "feature"
+    }
+  ]
+}

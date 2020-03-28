@@ -32,7 +32,11 @@ def root():
 
 @app.route('/collections/', methods=['GET'])
 def collections():
-    return render_template("root.html", datasets=os.listdir(PATHDATASETS))
+    re = request.args.get('f', None)
+    if re == 'html' or re is None:
+        return render_template("collections.html", datasets=os.listdir(PATHDATASETS))
+    # elif re == 'json':
+
 
 @app.route('/collections/<filename>/')
 def collection(filename):

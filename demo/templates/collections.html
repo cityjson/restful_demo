@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+<h2>Collections available:</h2>
+  <ol>
+  {% for d in datasets %}
+    <li>{{ d }}</li>
+  {% endfor %}
+  </ol>
+
+
+<h2>Queries:</h2>
+  <ol>
+    <li>/delft/ --> info</li>
+    <li>/denhaag/download/ --> full dataset</li>
+    <li>/denhaag/subset/random/3 --> 3 random CO</li>
+    <li>/denhaag/subset/bbox/0/0/100/100 --> all CO inside bbox [0, 0, 100, 100]</li>
+    <li>/delft/subset/cotype/Building --> all Buildings</li>
+  </ol>
+
+
+
+
+{% endblock %}
