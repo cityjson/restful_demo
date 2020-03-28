@@ -53,7 +53,7 @@ This is up to discussion.
   - `"transform"` not allowed
   - `"version"` not present: in the collection or as metadata
   - `"metadata"` not present: in the metadata (perhaps WFS should be modified)
-  - `"geometry-templates"` not present: those should be resolved/deferenced
+  - `"geometry-templates"` not present: those should be resolved/dereferenced
   - `"extensions"` not present: in the metadata or collection
 
 
