@@ -17,9 +17,7 @@ def root():
     if re == 'html' or re is None:
         return render_template("root.html")
     elif re == 'json':
-        j = {}
-        j["hugo"] = "ledoux"
-        return j
+        return render_template("todo.html")
     else:
         return JINVALIDFORMAT
 
@@ -28,9 +26,9 @@ def root():
 def collections():
     re = request.args.get('f', None)
     if re == 'html' or re is None:
-        # print(jindex)
         return render_template("collections.html", datasets=jindex['collections'])
-    # elif re == 'json':
+    elif re == 'json':
+        return jindex
 
 
 @app.route('/collections/<dataset>/', methods=['GET'])
@@ -40,7 +38,12 @@ def collection(dataset):
         for each in jindex['collections']:
             if each['id'] == dataset:
                 return render_template("collection.html", dataset=each)
-    # elif re == 'json':
+        return JINVALIDFORMAT
+    elif re == 'json':
+        for each in jindex['collections']:
+            if each['id'] == dataset:
+                return each
+        return JINVALIDFORMAT
 
 
 
@@ -65,7 +68,7 @@ def item(dataset, identifier):
     elif re == 'json':
         cm = getcm(dataset)
         if cm == None:
-            return render_template("wrongdataset.html")
+            return JINVALIDFORMAT
         else:        
             return cm.j
 
