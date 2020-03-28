@@ -135,7 +135,7 @@ def visualise(dataset):
 @app.route('/stream/', methods=['GET'])
 def stream():
     dataset = request.args.get('dataset', None)
-    f = open("./datasets/" + dataset + ".json", "r")
+    f = open(PATHDATASETS + dataset + ".json", "r")
     cjc = json.loads(f.read())
     
     # line-delimited JSON generator
