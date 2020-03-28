@@ -9,6 +9,11 @@
       "title": "Sample dataset part of Delft (from 3dfier)", 
       "id": "delft", 
       "itemType": "feature"
+    },
+	{
+      "title": "CityJSONCollection example of Delft", 
+      "id": "delft_collection", 
+      "itemType": "feature"
     }
   ]
 }
