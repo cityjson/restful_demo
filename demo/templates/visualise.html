@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+
+{% block head %}
+
+<meta charset='utf-8' />
+<title>harp.gl CityJSONCollection visualisation</title>
+<script type="text/javascript" src="{{ url_for('static', filename='etc/proj4.js') }}"></script>
+<script type="text/javascript" src="https://unpkg.com/three@0.115.0/build/three.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='etc/harp.js') }}"></script>
+<script type="text/javascript"src="{{ url_for('static', filename='etc/harp-decoders.js') }}"></script>
+{% endblock %}
+
+
+<!-- Initialise variables from Flask with Jinja-->
+{% block body %}
+<script>
+    // Retrieve variables from Flask if they exist (from render_template arguments)
+    {% if dataset is defined %}
+    var dataset = {{ dataset|tojson }};
+    {% endif %}
+    
+
+    // Initiate streaming from server
+    // Adapted from https://stackoverflow.com/questions/31948285/display-data-streamed-from-a-flask-view-as-it-updates
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "{{ url_for('stream', dataset=dataset) }}");
+    xhr.send();
+    var position = 0;
+
+    
+    function handleNewData() {
+        var messages = xhr.responseText.split('\n');
+        messages.slice(position, -1).forEach(function(value) {
+            console.log(value);
+        });
+        position = messages.length - 1;
+    }
+
+    var timer;
+    timer = setInterval(function() {
+        // check the response for new data
+        handleNewData();
+        // stop checking once the response has ended
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            clearInterval(timer);
+            latest.textContent = 'Done';
+        }
+    }, 1000);
+    
+</script>
+
+
+<!--map element for harp.gl-->
+<canvas id="map"></canvas>
+
+{% endblock %}
