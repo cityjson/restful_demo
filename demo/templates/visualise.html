@@ -1,32 +1,47 @@
-{% extends "layout.html" %}
-
-
 {% block head %}
 
 <meta charset='utf-8' />
-<title>harp.gl CityJSONCollection visualisation</title>
-<script type="text/javascript" src="{{ url_for('static', filename='proj4.js') }}"></script>
-<script type="text/javascript" src="https://unpkg.com/three@0.115.0/build/three.min.js"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='harp.js') }}"></script>
-<script type="text/javascript"src="{{ url_for('static', filename='harp-decoders.js') }}"></script>
+<title>CityJSONCollection visualisation</title>
+
+<style>
+    body, html { border: 0; margin: 0; padding: 0}
+    #map { height: 100vh; width: 100vw; }
+ </style>
+
 {% endblock %}
 
 
-<!-- Initialise variables from Flask with Jinja-->
+
 {% block body %}
+
+<!-- 3rd party code -->
+<script src="https://threejs.org/build/three.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='proj4.js') }}"></script>
+<script src="https://unpkg.com/@here/harp.gl/dist/harp.js"></script>
+<script src="https://unpkg.com/@here/harp.gl/dist/harp-decoders.js"></script>
+
+<!-- Scripts for loading CityObjects -->
+<script type="text/javascript" src="{{ url_for('static', filename='handle_cjf.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='functions.js') }}"></script>
+
+<!--Initiate harp.gl map -->
+<canvas id="map"></canvas>
+<script type="text/javascript" src="{{ url_for('static', filename='harpgl_map.js') }}"></script>
+
+
+<!-- Retrieve variables from Flask if they exist (from render_template arguments) -->
 <script>
-    // Retrieve variables from Flask if they exist (from render_template arguments)
     {% if dataset is defined %}
     var dataset = {{ dataset|tojson }};
     streamUrl = {{ url_for('stream', dataset=dataset)|tojson }};
     {% endif %}
 </script>
 
+
+<!-- Initiate streaming of dataset into harp.gl map -->
 <script type="text/javascript"
 src="{{ url_for('static', filename='stream_cjc.js') }}"></script>
 
-
-<!--map element for harp.gl-->
-<canvas id="map"></canvas>
 
 {% endblock %}

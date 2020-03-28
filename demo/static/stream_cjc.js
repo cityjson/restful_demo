@@ -1,4 +1,4 @@
-// Initiate streaming from server
+//=== Initiate streaming from server
 // Adapted from https://stackoverflow.com/questions/31948285/display-data-streamed-from-a-flask-view-as-it-updates
 var xhr = new XMLHttpRequest();
 xhr.open("GET", streamUrl);
@@ -13,7 +13,9 @@ function handleNewData() {
     // messages end with a newline, so split will always show one extra empty message at the end
     var messages = xhr.responseText.split('\n');
     messages.slice(position, -1).forEach(function(value) {
-        console.log(value);
+        //console.log(value);
+        // When a new CityJSONFeature is loaded, add it to the map
+        handleNewFeature(value)
     });
     position = messages.length - 1;
 }
