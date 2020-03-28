@@ -4,24 +4,18 @@ from cjio import cityjson
 import json
 import os
 
+app = Flask(__name__)
+
 PATHDATASETS = './datasets/'
 JINVALIDFORMAT = {"code": "InvalidParameterValue", "description": "Invalid format"}
 
-def getcm(filename):
-    p = PATHDATASETS + filename + '.json'
-    if os.path.isfile(p) == False:
-        return None
-    f = open(p)
-    return cityjson.reader(file=f, ignore_duplicate_keys=True)
-
-
-app = Flask(__name__)
+jindex = json.loads(open('./datasets/index.json').read())
 
 @app.route('/', methods=['GET'])
 def root():
     re = request.args.get('f', None)
     if re == 'html' or re is None:
-        return render_template("root.html", datasets=os.listdir(PATHDATASETS))
+        return render_template("root.html")
     elif re == 'json':
         j = {}
         j["hugo"] = "ledoux"
@@ -34,23 +28,58 @@ def root():
 def collections():
     re = request.args.get('f', None)
     if re == 'html' or re is None:
-        return render_template("collections.html", datasets=os.listdir(PATHDATASETS))
+        # print(jindex)
+        return render_template("collections.html", datasets=jindex['collections'])
     # elif re == 'json':
 
 
-@app.route('/collections/<filename>/')
-def collection(filename):
-    cm = getcm(filename)
-    if cm == None:
-        return render_template("wrongdataset.html")
-    else:        
-        return cm.j
+@app.route('/collections/<dataset>/', methods=['GET'])
+def collection(dataset):
+    re = request.args.get('f', None)
+    if re == 'html' or re is None:
+        for each in jindex['collections']:
+            if each['id'] == dataset:
+                return render_template("collection.html", dataset=each)
+    # elif re == 'json':
+
+
+
+@app.route('/collections/<dataset>/items/', methods=['GET'])
+def items(dataset):
+    re = request.args.get('f', None)
+    if re == 'html' or re is None:
+        return render_template("todo.html")
+    elif re == 'json':
+        cm = getcm(dataset)
+        if cm == None:
+            return render_template("wrongdataset.html")
+        else:        
+            return cm.j
+
+
+@app.route('/collections/<dataset>/items/<identifier>/', methods=['GET'])
+def item(dataset, identifier):
+    re = request.args.get('f', None)
+    if re == 'html' or re is None:
+        return render_template("todo.html")
+    elif re == 'json':
+        cm = getcm(dataset)
+        if cm == None:
+            return render_template("wrongdataset.html")
+        else:        
+            return cm.j
 
 
 @app.errorhandler(404)
 def not_found(error):
     return render_template('404.html'), 404
 
+def getcm(filename):
+    p = PATHDATASETS + filename + '.json'
+    if os.path.isfile(p) == False:
+        return None
+    f = open(p)
+    return cityjson.reader(file=f, ignore_duplicate_keys=True)
 
 
 # @app.route('/<filename>/download/')
