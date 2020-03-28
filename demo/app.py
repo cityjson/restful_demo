@@ -6,10 +6,14 @@ import os
 
 app = Flask(__name__)
 
-PATHDATASETS = './datasets/'
-JINVALIDFORMAT = {"code": "InvalidParameterValue", "description": "Invalid format"}
-
 jindex = json.loads(open('./datasets/index.json').read())
+PATHDATASETS = './datasets/'
+
+#-- errors
+JINVALIDFORMAT     = {"code": "InvalidParameterValue", "description": "Invalid format"}
+JINVALIDCOLLECTION = {"code": "InvalidParameterValue", "description": "Invalid feature collection"}
+JINVALIDIDENTIFIER = {"code": "NotFound", "description": "identifier not found"}
+
 
 @app.route('/', methods=['GET'])
 def root():
@@ -29,6 +33,9 @@ def collections():
         return render_template("collections.html", datasets=jindex['collections'])
     elif re == 'json':
         return jindex
+    else:
+        return JINVALIDFORMAT
+
 
 
 @app.route('/collections/<dataset>/', methods=['GET'])
@@ -43,6 +50,8 @@ def collection(dataset):
         for each in jindex['collections']:
             if each['id'] == dataset:
                 return each
+        return JINVALIDCOLLECTION
+    else:
         return JINVALIDFORMAT
 
 
@@ -55,13 +64,15 @@ def items(dataset):
     elif re == 'json':
         cm = getcm(dataset)
         if cm == None:
-            return render_template("wrongdataset.html")
+            return JINVALIDCOLLECTION
         else:        
             return cm.j
+    else:
+        return JINVALIDFORMAT
 
 
-@app.route('/collections/<dataset>/items/<identifier>/', methods=['GET'])
-def item(dataset, identifier):
+@app.route('/collections/<dataset>/items/<featureID>/', methods=['GET'])
+def item(dataset, featureID):
     re = request.args.get('f', None)
     if re == 'html' or re is None:
         return render_template("todo.html")
@@ -71,6 +82,8 @@ def item(dataset, identifier):
             return JINVALIDFORMAT
         else:        
             return cm.j
+    else:
+        return JINVALIDFORMAT
 
 
 @app.errorhandler(404)
