@@ -75,13 +75,39 @@ def items(dataset):
 def item(dataset, featureID):
     re = request.args.get('f', None)
     if re == 'html' or re is None:
-        return render_template("todo.html")
+        cm = getcm(dataset)
+        if cm == None:
+            return JINVALIDFORMAT
+        else:
+            if featureID not in cm.j['CityObjects']:
+                return JINVALIDIDENTIFIER
+            f = cm.get_subset_ids([featureID], exclude=False).j
+            if 'metadata' in f:
+                del f['metadata']
+            if 'version' in f:
+                del f['version']
+            if 'extensions' in f:
+                del f['extensions']
+            f['type'] = 'CityJSONFeature'
+            f['id'] = featureID
+            return render_template("item.html", jitem=f)
     elif re == 'json':
         cm = getcm(dataset)
         if cm == None:
             return JINVALIDFORMAT
-        else:        
-            return cm.j
+        else:
+            if featureID not in cm.j['CityObjects']:
+                return JINVALIDIDENTIFIER
+            f = cm.get_subset_ids([featureID], exclude=False).j
+            if 'metadata' in f:
+                del f['metadata']
+            if 'version' in f:
+                del f['version']
+            if 'extensions' in f:
+                del f['extensions']
+            f['type'] = 'CityJSONFeature'
+            f['id'] = featureID
+            return f
     else:
         return JINVALIDFORMAT
 
