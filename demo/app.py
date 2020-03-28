@@ -124,6 +124,31 @@ def getcm(filename):
     return cityjson.reader(file=f, ignore_duplicate_keys=True)
 
 
+@app.route('/collections/<dataset>/visualise/', methods=['GET'])
+def visualise(dataset):
+    for each in jindex['collections']:
+        if each['id'] == dataset:
+            return render_template("visualise.html", dataset = dataset)
+    return JINVALIDFORMAT
+
+
+@app.route('/stream/', methods=['GET'])
+def stream():
+    dataset = request.args.get('dataset', None)
+    f = open("./datasets/" + dataset + ".json", "r")
+    cjc = json.loads(f.read())
+    
+    # line-delimited JSON generator
+    def generate():
+        for feature in cjc["features"]:
+            feature = str(feature)
+            yield '{}\n'.format(feature)
+            
+    f.close()
+            
+    return app.response_class(generate(), mimetype='application/json')
+
+
 # @app.route('/<filename>/download/')
 # def cmd_download(filename):
 #     cm = getcm(filename)
