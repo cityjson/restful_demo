@@ -6,12 +6,82 @@ var featureDict = {} //contains the features
 var meshes = [] //contains the meshes of the objects
 var geoms = {} //contains the geometries of the objects
 
-// Variables for map focus position and coordinate normalisation
-// hardcoded is bad
-var bbox = [84829.322, 447477.674,
-            85079.554, 447750.636];
-var mid_wgs = [4.3668943, 52.0124627];
+// Bbox necessary for vertex normalisation (to place them around the origin, threejs coordinate system)
+var bbox = [[84616.468, 447422.999, -0.47],
+            [85140.839, 447750.636, 13.8]];
 
+var bboxMid = [bbox[0][0] + ((bbox[1][0] - bbox[0][0]) / 2), 
+              bbox[0][1] + ((bbox[1][1] - bbox[0][1]) / 2), 
+              bbox[0][2] + ((bbox[1][2] - bbox[0][2]) / 2)]
+
+  // Used for normalising coordinates
+  // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
+var diag = Math.sqrt((bbox[1][0] - bbox[0][0]) * (bbox[1][0]-bbox[0][0]) + 
+                    (bbox[1][1] - bbox[0][1]) * (bbox[1][1]-bbox[0][1]) +
+                    (bbox[1][2] - bbox[0][2]) * (bbox[1][2]-bbox[0][2]))
+
+//called at document load and create the viewer functions
+function initViewer() {
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(
+    60, // Field of view
+    window.innerWidth / window.innerHeight, // Aspect ratio
+    0.001, // Near clipping pane
+    10000 // Far clipping pane
+  );
+
+
+  // Focus camera on middle of dataset
+  camera.position.set(0, 0, 2);
+  camera.lookAt(bboxMid[0], bboxMid[1], bboxMid[2]);
+
+  //renderer for three.js
+  renderer = new THREE.WebGLRenderer({
+    antialias: true
+  });
+  document.getElementById("viewer").appendChild(renderer.domElement);
+  renderer.setSize($("#viewer").width(), $("#viewer").height());
+  renderer.setClearColor(0xFFFFFF);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  // add raycaster and mouse (for clickable objects)
+  raycaster = new THREE.Raycaster()
+  mouse = new THREE.Vector2();
+
+  //add AmbientLight (light that is only there that there's a minimum of light and you can see color)
+  //kind of the natural daylight
+  var am_light = new THREE.AmbientLight(0xFFFFFF, 0.7); // soft white light
+  scene.add(am_light);
+
+  // Add directional light
+  var spot_light = new THREE.SpotLight(0xDDDDDD);
+  spot_light.position.set(84616, -1, 447422);
+  spot_light.target = scene;
+  spot_light.castShadow = true;
+  spot_light.intensity = 0.4
+  spot_light.position.normalize()
+  scene.add(spot_light);
+
+  //Helpers
+  /*
+  var spotLightHelper = new THREE.SpotLightHelper( spot_light );
+  scene.add( spotLightHelper );
+  var helper = new THREE.CameraHelper( spot_light.shadow.camera );
+  scene.add( helper );
+  var axesHelper = new THREE.AxesHelper( 5 );
+  scene.add( axesHelper );
+  */
+
+  // render & orbit controls
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.addEventListener('change', function() {
+    renderer.render(scene, camera);
+  });
+
+    //render before loading so that window is not black
+    renderer.render(scene, camera);
+}
 
 async function handleNewFeature(feature) {
   // JSON needs to have double quotes
@@ -25,12 +95,8 @@ async function handleNewFeature(feature) {
    //load the CityObjects into the viewer
    await loadCityObjects(featureName)
 
-   for(var i = 0; i < meshes.length; i++)
-   {
-      meshes[i].geoPosition = new harp.GeoCoordinates(mid_wgs[1], mid_wgs[0]);
-      map.mapAnchors.add(meshes[i]);
-   }
-   map.update();
+   renderer.render(scene, camera);
+
 }
 
 //convert CityObjects to mesh and add them to the viewer
@@ -38,16 +104,17 @@ async function loadCityObjects(featureName) {
 
    var json = featureDict[featureName]
 
-    // Normalise vertices
-    var helftx = (bbox[2] - bbox[0]) / 2;
-    var helfty = (bbox[3] - bbox[1]) / 2;
-
+   // Normalise coordinates
+   // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
+   var normGeom = new THREE.Geometry()
    for (var i = 0; i < json.vertices.length; i++) {
-     
-     json.vertices[i][0] = json.vertices[i][0] - bbox[0] - helftx
-     json.vertices[i][1] = json.vertices[i][1] - bbox[1] - helfty
-     json.vertices[i][2] = json.vertices[i][2]
+       json.vertices[i][0] = (json.vertices[i][0] - bbox[0][0]) / diag
+       json.vertices[i][1] = (json.vertices[i][1] - bbox[0][1]) / diag
+       json.vertices[i][2] = (json.vertices[i][2] - bbox[0][2]) / diag
    }
+
+   //enable movement parallel to ground
+   controls.screenSpacePanning = true;
    
 
    //count number of objects
@@ -59,7 +126,7 @@ async function loadCityObjects(featureName) {
  
    //iterate through all cityObjects
    for (var cityObj in json.CityObjects) {
-      console.log(cityObj);
+      //console.log(cityObj);
  
      try {
        //parse cityObj that it can be displayed in three js
@@ -105,8 +172,7 @@ async function loadCityObjects(featureName) {
      coMesh.featureName = featureName
      coMesh.castShadow = true;
      coMesh.receiveShadow = true;
-     //scene.add(coMesh);
-     //console.log(coMesh);
+     scene.add(coMesh);
      meshes.push(coMesh);
    }
  }

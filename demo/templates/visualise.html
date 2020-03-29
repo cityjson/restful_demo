@@ -4,8 +4,14 @@
 <title>CityJSONCollection visualisation</title>
 
 <style>
-    body, html { border: 0; margin: 0; padding: 0}
-    #map { height: 100vh; width: 100vw; }
+#viewer{
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0px;
+  top: 0px;
+  z-index: -1;
+}
  </style>
 
 {% endblock %}
@@ -18,17 +24,14 @@
 <script src="https://threejs.org/build/three.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='3rd/jquery.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='3rd/proj4.js') }}"></script>
-<script src="https://unpkg.com/@here/harp.gl/dist/harp.js"></script>
-<script src="https://unpkg.com/@here/harp.gl/dist/harp-decoders.js"></script>
 
 <!-- Scripts for loading CityObjects -->
-<script type="text/javascript" src="{{ url_for('static', filename='handle_cjf.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='functions.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='OrbitControls.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='handle_cjf.js') }}"></script>
 
-<!--Initiate harp.gl map -->
-<canvas id="map"></canvas>
-<script type="text/javascript" src="{{ url_for('static', filename='harpgl_map.js') }}"></script>
-
+<!-- CJ visualised in this element -->
+<div id="viewer"></div>
 
 <!-- Retrieve variables from Flask if they exist (from render_template arguments) -->
 <script>
