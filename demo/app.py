@@ -136,13 +136,18 @@ def visualise(dataset):
 def stream():
     dataset = request.args.get('dataset', None)
     f = open(PATHDATASETS + dataset + ".json", "r")
-    cjc = json.loads(f.read())
+    cj = json.loads(f.read())
     
     # line-delimited JSON generator
     def generate():
-        for feature in cjc["features"]:
-            feature = str(feature)
-            yield '{}\n'.format(feature)
+        if cj['type'] == "CityJSONCollection":
+            for feature in cj["features"]:
+                feature = str(feature)
+                yield '{}\n'.format(feature)
+        elif cj['type'] == "CityJSON":
+            cm = str(cj)
+            yield '{}\n'.format(cm)
+            
             
     f.close()
             
