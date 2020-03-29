@@ -3,7 +3,8 @@ import json
 from cjio import cityjson
 
 #files = glob.glob('subsets/*.json')
-file = "../delft.json"
+dataset = "montreal"
+file = "../" + dataset + ".json"
 
 cjc = {"type": "CityJSONCollection",
        "bbox": [],
@@ -26,5 +27,5 @@ with open(file, "r") as f:
         cjc["features"].append(cjf)
         
 
-with open("delft_collection.json", "w") as f:
+with open(dataset + "_collection.json", "w") as f:
     f.write(json.dumps(cjc))
