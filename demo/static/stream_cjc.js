@@ -28,4 +28,4 @@ timer = setInterval(function() {
     if (xhr.readyState == XMLHttpRequest.DONE) {
         clearInterval(timer);
     }
-}, 1000);
+}, 10);
