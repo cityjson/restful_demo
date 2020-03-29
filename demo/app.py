@@ -141,9 +141,13 @@ def stream():
     # line-delimited JSON generator
     def generate():
         if cj['type'] == "CityJSONCollection":
-            for feature in cj["features"]:
-                feature = str(feature)
-                yield '{}\n'.format(feature)
+            for k, v in cj.items():
+                if k == "features":
+                    for feature in cj[k]:
+                        feature = str(feature)
+                        yield '{}\n'.format(feature)
+                else:
+                    yield '{}\n'.format({k: v})
         elif cj['type'] == "CityJSON":
             cm = str(cj)
             yield '{}\n'.format(cm)
