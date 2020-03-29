@@ -1,3 +1,4 @@
+initDocument();
 initViewer();
 
 //=== Initiate streaming from server

@@ -1,6 +1,16 @@
 //=== Functions for visualisation
 // Adapted from https://github.com/tudelft3d/CityJSON-viewer/blob/master/js/viewer.js
 
+var boolDrag = false
+//Camera variables
+var scene
+var camera
+var renderer
+var raycaster
+var mouse
+var controls
+var spot_light
+
 // JSON variables
 var featureDict = {} //contains the features
 var meshes = [] //contains the meshes of the objects
@@ -10,15 +20,44 @@ var geoms = {} //contains the geometries of the objects
 var bbox = [[84616.468, 447422.999, -0.47],
             [85140.839, 447750.636, 13.8]];
 
-var bboxMid = [bbox[0][0] + ((bbox[1][0] - bbox[0][0]) / 2), 
-              bbox[0][1] + ((bbox[1][1] - bbox[0][1]) / 2), 
-              bbox[0][2] + ((bbox[1][2] - bbox[0][2]) / 2)]
-
   // Used for normalising coordinates
   // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
 var diag = Math.sqrt((bbox[1][0] - bbox[0][0]) * (bbox[1][0]-bbox[0][0]) + 
                     (bbox[1][1] - bbox[0][1]) * (bbox[1][1]-bbox[0][1]) +
                     (bbox[1][2] - bbox[0][2]) * (bbox[1][2]-bbox[0][2]))
+
+
+function initDocument(){
+
+
+  $("#dragger").mousedown(function() {
+    boolDrag = true;
+  });
+
+  $(document).mouseup(function() {
+    boolDrag = false
+  });
+
+  $(document).mousemove(function(event) {
+    if (boolDrag == false) {
+      return
+    }
+    var xPosition = event.pageX;
+    var screenWidth = $(window).width();
+
+    if (xPosition > 250 && xPosition < screenWidth * 0.8) {
+      $("#pageHelper").width(xPosition)
+      $("#dropbox").width(xPosition - 50)
+    }
+  });
+
+  $(window).resize(function() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+}
 
 //called at document load and create the viewer functions
 function initViewer() {
@@ -33,13 +72,14 @@ function initViewer() {
 
   // Focus camera on middle of dataset
   camera.position.set(0, 0, 2);
-  camera.lookAt(bboxMid[0], bboxMid[1], bboxMid[2]);
+  //camera.lookAt(0,0,0);
 
   //renderer for three.js
   renderer = new THREE.WebGLRenderer({
     antialias: true
   });
   document.getElementById("viewer").appendChild(renderer.domElement);
+  console.log($("#viewer").height())
   renderer.setSize($("#viewer").width(), $("#viewer").height());
   renderer.setClearColor(0xFFFFFF);
   renderer.shadowMap.enabled = true;
@@ -79,6 +119,10 @@ function initViewer() {
     renderer.render(scene, camera);
   });
 
+  controls.target.set(0, 0, 0);
+  //enable movement parallel to ground
+  controls.screenSpacePanning = true;
+
     //render before loading so that window is not black
     renderer.render(scene, camera);
 }
@@ -108,13 +152,11 @@ async function loadCityObjects(featureName) {
    // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
    var normGeom = new THREE.Geometry()
    for (var i = 0; i < json.vertices.length; i++) {
-       json.vertices[i][0] = (json.vertices[i][0] - bbox[0][0]) / diag
-       json.vertices[i][1] = (json.vertices[i][1] - bbox[0][1]) / diag
-       json.vertices[i][2] = (json.vertices[i][2] - bbox[0][2]) / diag
+       json.vertices[i][0] = ((json.vertices[i][0] - bbox[0][0]) / diag) * 2 - 1
+       json.vertices[i][1] = ((json.vertices[i][1] - bbox[0][1]) / diag) * 2 - 1
+       json.vertices[i][2] = ((json.vertices[i][2] - bbox[0][2]) / diag) * 2 - 1
    }
 
-   //enable movement parallel to ground
-   controls.screenSpacePanning = true;
    
 
    //count number of objects

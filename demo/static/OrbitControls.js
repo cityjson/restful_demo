@@ -14,7 +14,6 @@
 //    Pan - right mouse, or left mouse + ctrl/metaKey, or arrow keys / touch: two-finger move
 
 THREE.OrbitControls = function ( object, domElement ) {
-
 	this.object = object;
 
 	this.domElement = ( domElement !== undefined ) ? domElement : document;

@@ -10,7 +10,7 @@
   width: 100%;
   left: 0px;
   top: 0px;
-  z-index: -1;
+
 }
  </style>
 
@@ -30,7 +30,8 @@
 <script type="text/javascript" src="{{ url_for('static', filename='OrbitControls.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='handle_cjf.js') }}"></script>
 
-<!-- CJ visualised in this element -->
+<!-- Elements for visualisation -->
+<div id="dragger"></div>
 <div id="viewer"></div>
 
 <!-- Retrieve variables from Flask if they exist (from render_template arguments) -->
