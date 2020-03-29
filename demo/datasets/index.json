@@ -14,6 +14,16 @@
       "title": "CityJSONCollection example of Delft", 
       "id": "delft_collection", 
       "itemType": "feature"
+    },
+	{
+      "title": "Dataset of Montréal", 
+      "id": "montreal", 
+      "itemType": "feature"
+    },
+		{
+      "title": "CityJSONCollection example of Montréal", 
+      "id": "montreal_collection", 
+      "itemType": "feature"
     }
   ]
 }
