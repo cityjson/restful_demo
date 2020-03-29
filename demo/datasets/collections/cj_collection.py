@@ -1,20 +1,25 @@
 import glob
 import json
+from cjio import cityjson
 
-files = glob.glob('subsets/*.json')
+#files = glob.glob('subsets/*.json')
+file = "../delft.json"
 
-collection = {"type": "CityJSONCollection",
+cjc = {"type": "CityJSONCollection",
               "features": []}
 
-for file in files:
-    with open(file, "r") as f:
-        feature = json.loads(f.read())
+#for file in files:
+with open(file, "r") as f:
+    cm = cityjson.reader(file=f, ignore_duplicate_keys=True)
+    for co in cm.j["CityObjects"]:
         cjf = {}
         cjf["type"] = "CityJSONFeature"
-        cjf["id"] = list(feature["CityObjects"].keys())[0]
+        cjf["id"] = co
+        feature = cm.get_subset_ids([cjf["id"]], exclude=False).j
         cjf["CityObjects"] = feature["CityObjects"]
         cjf["vertices"] = feature["vertices"]
-        collection["features"].append(cjf)
+        cjc["features"].append(cjf)
+        
 
 with open("delft_collection.json", "w") as f:
-    f.write(json.dumps(collection))
+    f.write(json.dumps(cjc))
