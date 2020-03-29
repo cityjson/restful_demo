@@ -138,13 +138,24 @@ async function loadCityObjects(featureName) {
    // Normalise coordinates
    // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
    var normGeom = new THREE.Geometry()
-   for (var i = 0; i < json.vertices.length; i++) {
-       json.vertices[i][0] = ((json.vertices[i][0] - bbox[0]) / diag) * 2 - 1
-       json.vertices[i][1] = ((json.vertices[i][1] - bbox[1]) / diag) * 2 - 1
-       json.vertices[i][2] = ((json.vertices[i][2] - bbox[2]) / diag) * 2 - 1
-   }
 
-   
+   if ("transform" in json == false){
+    for (var i = 0; i < json.vertices.length; i++) {
+        json.vertices[i][0] = ((json.vertices[i][0] - bbox[0]) / diag) * 2 - 1
+        json.vertices[i][1] = ((json.vertices[i][1] - bbox[1]) / diag) * 2 - 1
+        json.vertices[i][2] = ((json.vertices[i][2] - bbox[2]) / diag) * 2 - 1
+    }
+  }
+  else{
+    var scale = json["transform"]["scale"];
+    var translate = json["transform"]["translate"];
+
+    for (var i = 0; i < json.vertices.length; i++) {
+      json.vertices[i][0] = ((json.vertices[i][0] * scale[0] + translate[0] - bbox[0]) / diag) * 2 - 1
+      json.vertices[i][1] = ((json.vertices[i][1] * scale[1] + translate[1] - bbox[1]) / diag) * 2 - 1
+      json.vertices[i][2] = ((json.vertices[i][2] * scale[2] + translate[2] - bbox[2]) / diag) * 2 - 1
+    }
+  }
 
    //count number of objects
    var totalco = Object.keys(json.CityObjects).length;
@@ -303,7 +314,7 @@ async function loadCityObjects(featureName) {
  
        //triangulate
        var tr = await earcut(pv, null, 2);
- 
+
        //create faces based on triangulation
        for (var j = 0; j < tr.length; j += 3) {
          geom.faces.push(

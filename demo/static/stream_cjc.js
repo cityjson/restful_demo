@@ -26,11 +26,21 @@ function handleNewData() {
             if (value[key] == "CityJSONFeature"){
                 handleNewFeature(value);
             }
+            else if (value[key] == "CityJSON"){
+                bbox = value["metadata"]["geographicalExtent"]
+                calculateDiag();
+                handleNewFeature(value);
+            }
         }
         // Initiate bbox and can now calculate diag, which is necessary for normalisation
         else if (key == "bbox"){
             bbox = value[key];
             calculateDiag();
+        }
+        else if (value["type"] == "CityJSON"){
+            bbox = value["metadata"]["geographicalExtent"]
+            calculateDiag();
+            handleNewFeature(value);
         }
     });
     position = messages.length - 1;
