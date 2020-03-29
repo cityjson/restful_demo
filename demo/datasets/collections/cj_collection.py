@@ -6,11 +6,16 @@ from cjio import cityjson
 file = "../delft.json"
 
 cjc = {"type": "CityJSONCollection",
-              "features": []}
+       "bbox": [],
+       "features": []}
 
 #for file in files:
 with open(file, "r") as f:
     cm = cityjson.reader(file=f, ignore_duplicate_keys=True)
+    try:
+        cjc["bbox"] = cm.j["metadata"]["geographicalExtent"]
+    except:
+        cjc["bbox"] = cm.calculate_bbox()
     for co in cm.j["CityObjects"]:
         cjf = {}
         cjf["type"] = "CityJSONFeature"
