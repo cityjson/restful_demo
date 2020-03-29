@@ -16,9 +16,22 @@ function handleNewData() {
     // messages end with a newline, so split will always show one extra empty message at the end
     var messages = xhr.responseText.split('\n');
     messages.slice(position, -1).forEach(function(value) {
-        //console.log(value);
-        // When a new CityJSONFeature is loaded, add it to the map
-        handleNewFeature(value)
+        // JSON needs to have double quotes
+        var value = value.replace(/'/g, '"');
+        value = JSON.parse(value);
+        var key = Object.keys(value)[0];
+
+        if (key == "type"){
+            // When a new CityJSONFeature is loaded, add it to the map
+            if (value[key] == "CityJSONFeature"){
+                handleNewFeature(value);
+            }
+        }
+        // Initiate bbox and can now calculate diag, which is necessary for normalisation
+        else if (key == "bbox"){
+            bbox = value[key];
+            calculateDiag();
+        }
     });
     position = messages.length - 1;
 }

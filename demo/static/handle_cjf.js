@@ -17,19 +17,19 @@ var meshes = [] //contains the meshes of the objects
 var geoms = {} //contains the geometries of the objects
 
 // Bbox necessary for vertex normalisation (to place them around the origin, threejs coordinate system)
-var bbox = [[84616.468, 447422.999, -0.47],
-            [85140.839, 447750.636, 13.8]];
+var bbox = [];
 
-  // Used for normalising coordinates
-  // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
-var diag = Math.sqrt((bbox[1][0] - bbox[0][0]) * (bbox[1][0]-bbox[0][0]) + 
-                    (bbox[1][1] - bbox[0][1]) * (bbox[1][1]-bbox[0][1]) +
-                    (bbox[1][2] - bbox[0][2]) * (bbox[1][2]-bbox[0][2]))
-
+// Used for normalising coordinates, function is called after bbox has been streamed
+// https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
+var diag = 0;
+function calculateDiag(){
+  diag = Math.sqrt(
+    (bbox[3] - bbox[0]) * (bbox[3] - bbox[0]) + 
+    (bbox[4] - bbox[1]) * (bbox[4] - bbox[1]) +
+    (bbox[5] - bbox[2]) * (bbox[5] - bbox[2]));
+}
 
 function initDocument(){
-
-
   $("#dragger").mousedown(function() {
     boolDrag = true;
   });
@@ -56,7 +56,6 @@ function initDocument(){
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
-
 }
 
 //called at document load and create the viewer functions
@@ -79,7 +78,6 @@ function initViewer() {
     antialias: true
   });
   document.getElementById("viewer").appendChild(renderer.domElement);
-  console.log($("#viewer").height())
   renderer.setSize($("#viewer").width(), $("#viewer").height());
   renderer.setClearColor(0xFFFFFF);
   renderer.shadowMap.enabled = true;
@@ -103,15 +101,8 @@ function initViewer() {
   spot_light.position.normalize()
   scene.add(spot_light);
 
-  //Helpers
-  /*
-  var spotLightHelper = new THREE.SpotLightHelper( spot_light );
-  scene.add( spotLightHelper );
-  var helper = new THREE.CameraHelper( spot_light.shadow.camera );
-  scene.add( helper );
-  var axesHelper = new THREE.AxesHelper( 5 );
-  scene.add( axesHelper );
-  */
+  //var axesHelper = new THREE.AxesHelper(5);
+  //scene.add(axesHelper);
 
   // render & orbit controls
   controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -128,13 +119,9 @@ function initViewer() {
 }
 
 async function handleNewFeature(feature) {
-  // JSON needs to have double quotes
-   feature = feature.replace(/'/g, '"');
-   var json = JSON.parse(feature);
-   
-   var featureName = 'cityjson';
+   var featureName = feature["id"];
    //add json to the dict
-   featureDict[featureName] = json;
+   featureDict[featureName] = feature;
 
    //load the CityObjects into the viewer
    await loadCityObjects(featureName)
@@ -147,21 +134,21 @@ async function handleNewFeature(feature) {
 async function loadCityObjects(featureName) {
 
    var json = featureDict[featureName]
-
+  
    // Normalise coordinates
    // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
    var normGeom = new THREE.Geometry()
    for (var i = 0; i < json.vertices.length; i++) {
-       json.vertices[i][0] = ((json.vertices[i][0] - bbox[0][0]) / diag) * 2 - 1
-       json.vertices[i][1] = ((json.vertices[i][1] - bbox[0][1]) / diag) * 2 - 1
-       json.vertices[i][2] = ((json.vertices[i][2] - bbox[0][2]) / diag) * 2 - 1
+       json.vertices[i][0] = ((json.vertices[i][0] - bbox[0]) / diag) * 2 - 1
+       json.vertices[i][1] = ((json.vertices[i][1] - bbox[1]) / diag) * 2 - 1
+       json.vertices[i][2] = ((json.vertices[i][2] - bbox[2]) / diag) * 2 - 1
    }
 
    
 
    //count number of objects
    var totalco = Object.keys(json.CityObjects).length;
-   console.log("Total # City Objects: ", totalco);
+   //console.log("Total # City Objects: ", totalco);
  
    //create dictionary
    var children = {}
