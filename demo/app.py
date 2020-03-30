@@ -127,7 +127,7 @@ def item(dataset, featureID):
                 del f['extensions']
             f['type'] = 'CityJSONFeature'
             f['id'] = featureID
-            return render_template("item.html", jitem=f)
+            return render_template("item.html", jitem=f, datasetname=dataset)
     elif re == 'json':
         cm = getcm(dataset)
         if cm == None:

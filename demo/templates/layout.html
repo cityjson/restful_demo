@@ -2,31 +2,22 @@
 <html>
 
 <head>
-<style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-</style>
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
 </head>
 
 <body>
+
+  <div class="container">
+    <div class="section bg-gray">
+      <h1>CityJSON 💜 OGC API&mdash;Features</h1>
+    </div>
+  
   {% block body %} {% endblock %}
 
-  <hr>
-    <a href="{{ request.path }}?f=json">JSON</a>
-  <hr>
-
+    <div class="divider"></div>
+      <a href="{{ request.path }}?f=json">JSON</a>
+  </div>
 </body>
 </html>

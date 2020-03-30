@@ -1,11 +1,23 @@
 {% extends "layout.html" %}
 {% block body %}
 
+<div class="section bg-gray">
+  <ul class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ url_for('root') }}">Home</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ url_for('collections') }}">collections</a>
+    </li>
+  </ul>
+</div>
+
 
 <h2>Collections available:</h2>
 
 
-<table>
+
+<table class="table table-striped table-hover">
   <tr>
     <th>Name</th>
     <th>Description</th>

@@ -3,12 +3,33 @@
 
 {% set theid = jitem['id'] %}
 
+<div class="section bg-gray">
+  <ul class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{{ url_for('root') }}">Home</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ url_for('collections') }}">collections</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ url_for('collections') }}{{ datasetname }}">{{ datasetname }}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ url_for('collections') }}{{ datasetname }}/items/">Items</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ url_for('collections') }}{{ datasetname }}/items/">{{ theid }}</a>
+    </li>
+  </ul>
+</div>
+
+
 <h2>{{ theid }} ({{ jitem['CityObjects'][theid]['type'] }})</h2>
 
 
 <h3>Attributes</h3>
 
-<table>
+<table class="table table-striped table-hover">
   <tr>
     <th>Name</th>
     <th>Value</th>
