@@ -11,3 +11,17 @@ In debug mode:
 ```bash
 $ env FLASK_APP=app.py FLASK_ENV=development flask run
 ```
+
+## example of WFS3 URL
+
+```
+http://localhost:5000/collections/delft/items/?limit=5&offset=10
+```
+
+```
+http://localhost:5000/collections/delft/items/?f=json
+```
+
+```
+http://localhost:5000/collections/delft/items/?bbox=1.2,44.9,55.0,1909.1
+```
