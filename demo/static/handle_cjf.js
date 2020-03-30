@@ -52,9 +52,10 @@ function initDocument(){
   });
 
   $(window).resize(function() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    v = document.getElementById("viewer")
+    camera.aspect = $("#viewer").width() / $("#viewer").height();
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize($("#viewer").width(), $("#viewer").height());
   });
 }
 
@@ -79,6 +80,7 @@ function initViewer() {
   });
   document.getElementById("viewer").appendChild(renderer.domElement);
   renderer.setSize($("#viewer").width(), $("#viewer").height());
+  console.log($("#viewer").height())
   renderer.setClearColor(0xFFFFFF);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -137,7 +139,6 @@ async function loadCityObjects(featureName) {
   
    // Normalise coordinates
    // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
-   var normGeom = new THREE.Geometry()
 
    if ("transform" in json == false){
     for (var i = 0; i < json.vertices.length; i++) {
@@ -159,7 +160,7 @@ async function loadCityObjects(featureName) {
 
    //count number of objects
    var totalco = Object.keys(json.CityObjects).length;
-   //console.log("Total # City Objects: ", totalco);
+   console.log("Total # City Objects: ", totalco);
  
    //create dictionary
    var children = {}

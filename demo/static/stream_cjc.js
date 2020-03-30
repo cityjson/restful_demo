@@ -1,6 +1,3 @@
-initDocument();
-initViewer();
-
 //=== Initiate streaming from server
 // Adapted from https://stackoverflow.com/questions/31948285/display-data-streamed-from-a-flask-view-as-it-updates
 var xhr = new XMLHttpRequest();

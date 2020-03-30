@@ -1,24 +1,14 @@
-{% block head %}
+
 
 <meta charset='utf-8' />
-<title>CityJSONCollection visualisation</title>
 
 <style>
 #viewer{
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  left: 0px;
-  top: 0px;
-
+    height:100%;
 }
  </style>
 
-{% endblock %}
 
-
-
-{% block body %}
 
 <!-- 3rd party code -->
 <script src="https://threejs.org/build/three.js"></script>
@@ -37,7 +27,21 @@
 
 <!-- Retrieve variables from Flask if they exist (from render_template arguments) -->
 <script>
+    {% if jcm is defined %}
+    initDocument();
+    initViewer();
+
+    var jcm = {{ jcm|tojson }}
+    bbox = jcm["metadata"]["geographicalExtent"]
+
+    calculateDiag();
+    handleNewFeature(jcm);
+    {% endif %}
+
     {% if dataset is defined %}
+    initDocument();
+    initViewer();
+
     var dataset = {{ dataset|tojson }};
     streamUrl = {{ url_for('stream', dataset=dataset)|tojson }};
     {% endif %}
@@ -49,4 +53,3 @@
 src="{{ url_for('static', filename='stream_cjc.js') }}"></script>
 
 
-{% endblock %}
