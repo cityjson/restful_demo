@@ -55,13 +55,14 @@ def collection(dataset):
         return JINVALIDFORMAT
 
 
-
+# http://data.example.org/collections/buildings/items.json?limit=50&offset=50
 @app.route('/collections/<dataset>/items/', methods=['GET']) #-- html/json/bbox/limit/offset
 def items(dataset):
+    #-- fetch the dataset, invalid if not found
     cm = getcm(dataset)
     if cm == None:
         return JINVALIDCOLLECTION
-    #-- fetch only subset based on bbox if query present
+    #-- bbox
     re_bbox = request.args.get('bbox', None) # TODO : only 2D bbox? I'd say yes, but should be discussed...
     if re_bbox is not None:
         r = re_bbox.split(',')
@@ -72,6 +73,32 @@ def items(dataset):
         except:
             return JINVALIDFORMAT
         cm = cm.get_subset_bbox(bbox=b, exclude=False)
+    #-- bbox
+    re_bbox = request.args.get('bbox', None) # TODO : only 2D bbox? I'd say yes, but should be discussed...
+    if re_bbox is not None:
+        r = re_bbox.split(',')
+        if len(r) != 4:
+            return JINVALIDFORMAT
+        try:
+            b = list(map(float, r))
+        except:
+            return JINVALIDFORMAT
+        cm = cm.get_subset_bbox(bbox=b, exclude=False)
+    #-- bbox
+    re = request.args.get('limit', None)
+    if re is None:
+        re_limit = 10
+    else:
+        re_limit = int(re)
+    #-- offset
+    re = request.args.get('offset', None)
+    if re is None:
+        re_offset = 0
+    else:
+        re_offset = int(re)
+    #-- html/json        
+    theids = cm.get_ordered_ids_top_co(limit=re_limit, offset=re_offset)
+    cm = cm.get_subset_ids(theids, exclude=False)
     re_f = request.args.get('f', None)
     if re_f == 'html' or re_f is None:
         return render_template("items.html", datasetname=dataset, jcm=cm.j['CityObjects'])
