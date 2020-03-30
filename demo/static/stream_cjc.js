@@ -1,10 +1,21 @@
 //=== Initiate streaming from server
 // Adapted from https://stackoverflow.com/questions/31948285/display-data-streamed-from-a-flask-view-as-it-updates
-var xhr = new XMLHttpRequest();
-xhr.open("GET", streamUrl);
-xhr.send();
-var position = 0;
+function startStream(){
+    xhr = new XMLHttpRequest();
+    xhr.open("GET", streamUrl);
+    xhr.send();
+    position = 0;
 
+    var timer;
+    timer = setInterval(function() {
+        // check the response for new data
+        handleNewData();
+        // stop checking once the response has ended
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            clearInterval(timer);
+        }
+    }, 10);
+}
 
 function handleNewData() {
     // the response text include the entire response so far
@@ -42,13 +53,3 @@ function handleNewData() {
     });
     position = messages.length - 1;
 }
-
-var timer;
-timer = setInterval(function() {
-    // check the response for new data
-    handleNewData();
-    // stop checking once the response has ended
-    if (xhr.readyState == XMLHttpRequest.DONE) {
-        clearInterval(timer);
-    }
-}, 10);
