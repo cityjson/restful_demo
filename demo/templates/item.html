@@ -5,6 +5,7 @@
 
 <h2>{{ theid }} ({{ jitem['CityObjects'][theid]['type'] }})</h2>
 
+
 <h3>Attributes</h3>
 
 <table>
@@ -12,12 +13,14 @@
     <th>Name</th>
     <th>Value</th>
   </tr>
-  {% for key, value in jitem['CityObjects'][theid]['attributes'].items() %}
-    <tr>
-      <td>{{ key }}</td>
-      <td>{{ value }}</td>
-    </tr>
-  {% endfor %}
+  {% if 'attributes' in jitem['CityObjects'][theid] %}
+    {% for key, value in jitem['CityObjects'][theid]['attributes'].items() %}
+      <tr>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
+      </tr>
+    {% endfor %}
+  {% endif %}
 </table>
 
 
