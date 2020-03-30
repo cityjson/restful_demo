@@ -165,7 +165,7 @@ def getcm(filename):
 def visualise(dataset):
     for each in jindex['collections']:
         if each['id'] == dataset:
-            return render_template("visualise.html", dataset = dataset)
+            return render_template("visualise.html", stream = dataset)
     return JINVALIDFORMAT
 
 

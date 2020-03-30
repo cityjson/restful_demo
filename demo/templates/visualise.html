@@ -47,9 +47,9 @@ src="{{ url_for('static', filename='stream_cjc.js') }}"></script>
     {% endif %}
 
     // We have a CityJSONCollection that needs to be streamed
-    {% if dataset is defined %}
-    var dataset = {{ dataset|tojson }};
-    streamUrl = {{ url_for('stream', dataset=dataset)|tojson }};
+    {% if stream is defined %}
+    var stream = {{ stream|tojson }};
+    streamUrl = {{ url_for('stream', dataset=stream)|tojson }};
     startStream();
     {% endif %}
 </script>
