@@ -26,7 +26,7 @@ def root():
         return JINVALIDFORMAT
 
 
-@app.route('/collections/', methods=['GET'])
+@app.route('/collections/', methods=['GET']) #-- html/json
 def collections():
     re = request.args.get('f', None)
     if re == 'html' or re is None:
@@ -38,7 +38,7 @@ def collections():
 
 
 
-@app.route('/collections/<dataset>/', methods=['GET'])
+@app.route('/collections/<dataset>/', methods=['GET']) #-- html/json
 def collection(dataset):
     re = request.args.get('f', None)
     if re == 'html' or re is None:
@@ -56,7 +56,7 @@ def collection(dataset):
 
 
 
-@app.route('/collections/<dataset>/items/', methods=['GET'])
+@app.route('/collections/<dataset>/items/', methods=['GET']) #-- html/json/bbox/limit/offset
 def items(dataset):
     cm = getcm(dataset)
     if cm == None:
@@ -81,7 +81,7 @@ def items(dataset):
         return JINVALIDFORMAT
 
 
-@app.route('/collections/<dataset>/items/<featureID>/', methods=['GET'])
+@app.route('/collections/<dataset>/items/<featureID>/', methods=['GET']) #-- html/json
 def item(dataset, featureID):
     re = request.args.get('f', None)
     if re == 'html' or re is None:
