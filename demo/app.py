@@ -58,15 +58,25 @@ def collection(dataset):
 
 @app.route('/collections/<dataset>/items/', methods=['GET'])
 def items(dataset):
-    re = request.args.get('f', None)
-    if re == 'html' or re is None:
-        return render_template("todo.html")
-    elif re == 'json':
-        cm = getcm(dataset)
-        if cm == None:
-            return JINVALIDCOLLECTION
-        else:        
-            return cm.j
+    cm = getcm(dataset)
+    if cm == None:
+        return JINVALIDCOLLECTION
+    #-- fetch only subset based on bbox if query present
+    re_bbox = request.args.get('bbox', None) # TODO : only 2D bbox? I'd say yes, but should be discussed...
+    if re_bbox is not None:
+        r = re_bbox.split(',')
+        if len(r) != 4:
+            return JINVALIDFORMAT
+        try:
+            b = list(map(float, r))
+        except:
+            return JINVALIDFORMAT
+        cm = cm.get_subset_bbox(bbox=b, exclude=False)
+    re_f = request.args.get('f', None)
+    if re_f == 'html' or re_f is None:
+        return render_template("items.html", datasetname=dataset, jcm=cm.j['CityObjects'])
+    elif re_f == 'json':
+        return cm.j
     else:
         return JINVALIDFORMAT
 

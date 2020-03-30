@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+<h2>{{ datasetname }}</h2>
+
+
+<h3>Items ({{ jcm | length }})</h3>
+
+<table>
+  <tr>
+    <th>id</th>
+    <th>type</th>
+  </tr>
+  {% for key, value in jcm.items() %}
+    <tr>
+      <td><a href="{{ request.path }}{{ key }}">{{ key }}</a></td>
+      <td>{{ value['type'] }}</td>
+    </tr>
+  {% endfor %}
+
+</table>
+
+
+
+
+{% endblock %}
