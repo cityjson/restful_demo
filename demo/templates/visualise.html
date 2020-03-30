@@ -20,6 +20,9 @@
 <script type="text/javascript" src="{{ url_for('static', filename='OrbitControls.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='3rd/earcut.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='handle_cjf.js') }}"></script>
+<!-- For streaming of dataset into viewer -->
+<script type="text/javascript"
+src="{{ url_for('static', filename='stream_cjc.js') }}"></script>
 
 <!-- Elements for visualisation -->
 <div id="dragger"></div>
@@ -27,29 +30,26 @@
 
 <!-- Retrieve variables from Flask if they exist (from render_template arguments) -->
 <script>
-    {% if jcm is defined %}
     initDocument();
     initViewer();
 
+    // We have a CityJSON
+    {% if jcm is defined %}
     var jcm = {{ jcm|tojson }}
-    bbox = jcm["metadata"]["geographicalExtent"]
 
-    calculateDiag();
     handleNewFeature(jcm);
     {% endif %}
 
-    {% if dataset is defined %}
-    initDocument();
-    initViewer();
+    // We have a CityJSONFeature
+    {% if jitem is defined %}
+    var jitem = {{ jitem|tojson }};
+    handleNewFeature(jitem);
+    {% endif %}
 
+    // We have a CityJSONCollection that needs to be streamed
+    {% if dataset is defined %}
     var dataset = {{ dataset|tojson }};
     streamUrl = {{ url_for('stream', dataset=dataset)|tojson }};
+    startStream();
     {% endif %}
 </script>
-
-
-<!-- Initiate streaming of dataset into harp.gl map -->
-<script type="text/javascript"
-src="{{ url_for('static', filename='stream_cjc.js') }}"></script>
-
-
