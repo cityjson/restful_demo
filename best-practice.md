@@ -1,32 +1,33 @@
 
-# CityJSON & OGC API -- Features (aka WFS3)
+# CityJSON & OGC API -- Features (formely known as WFS3)
 
-Here are some thoughts, and a concrete proposal, on making CityJSON "work" with [WFS3](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) ([GitHub repo for all matters WFS3](https://github.com/opengeospatial/ogcapi-features)).
+Here are some thoughts, and a concrete proposal, on making CityJSON "work" with [OGC API--Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) ([GitHub repo](https://github.com/opengeospatial/ogcapi-features)).
 
-The most frequent criticism related to CityJSON is "yeah but we cannot *stream* it, and WFS is impossible, look at the global list of vertices!".
+The most frequent criticism related to CityJSON is "yeah but we cannot *stream* it, and OGCAPIF is impossible, look at the global list of vertices!".
 
-I don't think the that list is the major problem, more the fact that WFS3 wasn't designed (its core at least) for complex models in 3D where features are linked to each other and where there are appearances and metadata and etc.
+I don't think the that list is the major problem, more the fact that OGCAPIF wasn't designed (its core at least) for complex models in 3D where features are linked to each other and where there are appearances and metadata and etc.
 
 
-## What WFS3 (currently) is
+## How is OGCAPIF currently implemented?
 
-- for 2D geometries only, explicitly stated
-- only for Simple Features, without textures/material
-- only one geometry per feature
-- GeoJSON is the recommended format, along with HTML (webpage with map and some nice info to click). 
-- GML is "supported", but there is no enthusiasm about it in the specs...
-- no support for structured metadata, there can be a link to an arbitray HTML page
-- CRS must be WGS84 (but in the future this will change)
+The main demo is [pygeoapi](https://demo.pygeoapi.io) and the main encoding is GeoJSON.
+This means:
 
-So CityJSON doesn't fit with the above, but to fair neither does CityGML-XML.
-This has little to do with the list of vertices in my opinion.
+  - for 2D geometries only
+  - only for Simple Features, without textures/material
+  - only one geometry per feature
+  - GeoJSON is the recommended format, along with HTML (webpage with map and some nice info to click). 
+  - GML is "supported", but there is no enthusiasm about it in the specs...
+  - no support for structured metadata, there can be a link to an arbitray HTML page
+  - CRS must be WGS84 (but others will be added in the future)
 
+Hovewer, the OGCAPIF specifications are not restricted to the above: 3D geometries and complex encodings can be supported by the API.
+
+Fitting CityJSON--even with its list of vertices--is in my opinion not a problem.
 This is rather easy to solve, as I show below.
-WFS3 doesn't prescribe the format, just the API.
-We can build the API for CityJSON as below, and it would be WFS3-compliant.
 
 
-## A proposal to make CityJSON WFS3-compliant
+## A proposal to make CityJSON OGCAPIF-compliant
 
 ### What is a FeatureCollection?
 
@@ -52,7 +53,7 @@ This is up to discussion.
 
   - `"transform"` not allowed
   - `"version"` not present: in the collection or as metadata
-  - `"metadata"` not present: in the metadata (perhaps WFS should be modified)
+  - `"metadata"` not present: in the metadata of the collection
   - `"geometry-templates"` not present: those should be resolved/dereferenced
   - `"extensions"` not present: in the metadata or collection
 
@@ -83,7 +84,7 @@ The same hack as used by everyone: [Line-delimited JSON](https://en.m.wikipedia.
 
 Called [GeoJSON Text Sequences](https://tools.ietf.org/html/rfc8142) also.
 
-So each line can be either a CityJSON or a CityJSONFeature, inline with WFS3 specs.
+So each line can be either a CityJSON or a CityJSONFeature, inline with OGCAPIF specs.
 
 
 ### Demo
