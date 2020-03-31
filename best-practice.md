@@ -93,3 +93,5 @@ In `/demo/` there's a simple [Flask](https://palletsprojects.com/p/flask/) serve
 There are a few CityJSON datasets in one folder, and then the behaviour of [pygeoapi](https://demo.pygeoapi.io/stable) has been more or less copied.
 
 It's not finished (OpenAPI and conformance are TODO), but it works and shows the idea are implementable.
+
+[-->demo is hosted online for a few users](http://hugoledoux.pythonanywhere.com/) (if 1000s of you go there at the same time it might not work 😬)

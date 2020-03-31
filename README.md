@@ -1,6 +1,10 @@
 # cityjson_ogcapi
 
 
+## demo online
+
+[-->demo](http://hugoledoux.pythonanywhere.com/)
+
 ## to run locally
 
 __Watch out, cjio must use the 'develop' branch otherwise nothing will work__
