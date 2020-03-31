@@ -16,11 +16,11 @@ var featureDict = {} //contains the features
 var meshes = [] //contains the meshes of the objects
 var geoms = {} //contains the geometries of the objects
 
+// If streaming CityJSONFeatures:
 // Bbox necessary for vertex normalisation (to place them around the origin, threejs coordinate system)
-var bbox = [];
-
 // Used for normalising coordinates, function is called after bbox has been streamed
 // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
+var bbox = [];
 var diag = 0;
 function calculateDiag(){
   diag = Math.sqrt(
@@ -28,6 +28,7 @@ function calculateDiag(){
     (bbox[4] - bbox[1]) * (bbox[4] - bbox[1]) +
     (bbox[5] - bbox[2]) * (bbox[5] - bbox[2]));
 }
+
 
 function initDocument(){
   $("#dragger").mousedown(function() {
@@ -41,13 +42,6 @@ function initDocument(){
   $(document).mousemove(function(event) {
     if (boolDrag == false) {
       return
-    }
-    var xPosition = event.pageX;
-    var screenWidth = $(window).width();
-
-    if (xPosition > 250 && xPosition < screenWidth * 0.8) {
-      $("#pageHelper").width(xPosition)
-      $("#dropbox").width(xPosition - 50)
     }
   });
 
@@ -115,12 +109,12 @@ function initViewer() {
   //enable movement parallel to ground
   controls.screenSpacePanning = true;
 
-    //render before loading so that window is not black
-    renderer.render(scene, camera);
+  //render before loading so that window is not black
+  renderer.render(scene, camera);
 }
 
 async function handleNewFeature(feature) {
-   var featureName = feature["id"];
+   var featureName = feature["CityJSON"];
    //add json to the dict
    featureDict[featureName] = feature;
 
@@ -128,7 +122,6 @@ async function handleNewFeature(feature) {
    await loadCityObjects(featureName)
 
    renderer.render(scene, camera);
-
 }
 
 //convert CityObjects to mesh and add them to the viewer
@@ -157,7 +150,8 @@ async function loadCityObjects(featureName) {
         json.vertices[i][2] = normGeom.vertices[i].z;
       }
     }
-    // Otherwise use bbox-based normalisation. It doesn't work the same, model will seem off-centered
+    // Otherwise use bbox-based normalisation. It doesn't work the same, model will seem off-centered 
+    // (y and z are mostly negative?)
     // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
     else {
       for (var i = 0; i < json.vertices.length; i++) {
@@ -167,7 +161,7 @@ async function loadCityObjects(featureName) {
       }
     }
   }
-  
+  // Still have to handle transform
   else{
     var scale = json["transform"]["scale"];
     var translate = json["transform"]["translate"];

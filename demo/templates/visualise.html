@@ -1,7 +1,3 @@
-
-
-<meta charset='utf-8' />
-
 <style>
 #viewer{
     height:100%;
@@ -9,16 +5,14 @@
  </style>
 
 
-
 <!-- 3rd party code -->
 <script src="https://threejs.org/build/three.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='3rd/jquery.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='3rd/proj4.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='3rd/earcut.js') }}"></script>
 
 <!-- Scripts for loading CityObjects -->
 <script type="text/javascript" src="{{ url_for('static', filename='functions.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='OrbitControls.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='3rd/earcut.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='handle_cjf.js') }}"></script>
 <!-- For streaming of dataset into viewer -->
 <script type="text/javascript"
@@ -28,7 +22,10 @@ src="{{ url_for('static', filename='stream_cjc.js') }}"></script>
 <div id="dragger"></div>
 <div id="viewer"></div>
 
-<!-- Retrieve variables from Flask if they exist (from render_template arguments) -->
+
+<!-- Initialise viewer functionalities,
+    retrieve variables from Flask if they exist (from render_template arguments),
+    and start visualisation/streaming -->
 <script>
     initDocument();
     initViewer();
