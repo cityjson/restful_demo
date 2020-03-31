@@ -64,18 +64,20 @@
   </ul>
 </div>
 
-<h2>{{ datasetname }}</h2>
-
-
-<h3>Items (limit={{ limit }}; offset={{ offset }})</h3>
-
-
 <div class="row">
   <div class="column" id="left">
     <div class="toast toast-warning">
   <button class="btn btn-clear float-right"></button>
   Tweak the query with eg '../items/?limit=20&offset=10' to see more features
 </div>
+
+<h2>{{ datasetname }}</h2>
+
+
+<h3>Items (limit={{ limit }}; offset={{ offset }})
+  <a href="{{ request.path }}?offset={{ offset + 10 }}"><button class="btn btn-primary">next</button></a>
+</h3>
+
 
     <table class="table table-striped table-hover">
       <tr>
