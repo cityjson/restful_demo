@@ -3,6 +3,8 @@
 
 ## to run locally
 
+__Watch out, cjio must use the 'develop' branch otherwise nothing will work__
+
 ```bash
 $ env FLASK_APP=app.py flask run
 ```
