@@ -52,9 +52,10 @@ function initDocument(){
   });
 
   $(window).resize(function() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    v = document.getElementById("viewer")
+    camera.aspect = $("#viewer").width() / $("#viewer").height();
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize($("#viewer").width(), $("#viewer").height());
   });
 }
 
@@ -136,16 +137,37 @@ async function loadCityObjects(featureName) {
    var json = featureDict[featureName]
   
    // Normalise coordinates
-   // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
-   var normGeom = new THREE.Geometry()
-
    if ("transform" in json == false){
-    for (var i = 0; i < json.vertices.length; i++) {
+    // If diag hasn't been calculated, we're not streaming -> three.js normalisation
+     if (diag == 0){
+      var normGeom = new THREE.Geometry()
+      for (var i = 0; i < json.vertices.length; i++) {
+        var point = new THREE.Vector3(
+          json.vertices[i][0],
+          json.vertices[i][1],
+          json.vertices[i][2]
+        );
+        normGeom.vertices.push(point)
+      }
+      normGeom.normalize()
+    
+      for (var i = 0; i < json.vertices.length; i++) {
+        json.vertices[i][0] = normGeom.vertices[i].x;
+        json.vertices[i][1] = normGeom.vertices[i].y;
+        json.vertices[i][2] = normGeom.vertices[i].z;
+      }
+    }
+    // Otherwise use bbox-based normalisation. It doesn't work the same, model will seem off-centered
+    // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
+    else {
+      for (var i = 0; i < json.vertices.length; i++) {
         json.vertices[i][0] = ((json.vertices[i][0] - bbox[0]) / diag) * 2 - 1
         json.vertices[i][1] = ((json.vertices[i][1] - bbox[1]) / diag) * 2 - 1
         json.vertices[i][2] = ((json.vertices[i][2] - bbox[2]) / diag) * 2 - 1
+      }
     }
   }
+  
   else{
     var scale = json["transform"]["scale"];
     var translate = json["transform"]["translate"];
@@ -159,7 +181,7 @@ async function loadCityObjects(featureName) {
 
    //count number of objects
    var totalco = Object.keys(json.CityObjects).length;
-   //console.log("Total # City Objects: ", totalco);
+   console.log("Total # City Objects: ", totalco);
  
    //create dictionary
    var children = {}

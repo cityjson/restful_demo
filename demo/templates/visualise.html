@@ -1,24 +1,14 @@
-{% block head %}
+
 
 <meta charset='utf-8' />
-<title>CityJSONCollection visualisation</title>
 
 <style>
 #viewer{
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  left: 0px;
-  top: 0px;
-
+    height:100%;
 }
  </style>
 
-{% endblock %}
 
-
-
-{% block body %}
 
 <!-- 3rd party code -->
 <script src="https://threejs.org/build/three.js"></script>
@@ -30,6 +20,9 @@
 <script type="text/javascript" src="{{ url_for('static', filename='OrbitControls.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='3rd/earcut.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='handle_cjf.js') }}"></script>
+<!-- For streaming of dataset into viewer -->
+<script type="text/javascript"
+src="{{ url_for('static', filename='stream_cjc.js') }}"></script>
 
 <!-- Elements for visualisation -->
 <div id="dragger"></div>
@@ -37,16 +30,26 @@
 
 <!-- Retrieve variables from Flask if they exist (from render_template arguments) -->
 <script>
-    {% if dataset is defined %}
-    var dataset = {{ dataset|tojson }};
-    streamUrl = {{ url_for('stream', dataset=dataset)|tojson }};
+    initDocument();
+    initViewer();
+
+    // We have a CityJSON
+    {% if jcm is defined %}
+    var jcm = {{ jcm|tojson }}
+
+    handleNewFeature(jcm);
+    {% endif %}
+
+    // We have a CityJSONFeature
+    {% if jitem is defined %}
+    var jitem = {{ jitem|tojson }};
+    handleNewFeature(jitem);
+    {% endif %}
+
+    // We have a CityJSONCollection that needs to be streamed
+    {% if stream is defined %}
+    var stream = {{ stream|tojson }};
+    streamUrl = {{ url_for('stream', dataset=stream)|tojson }};
+    startStream();
     {% endif %}
 </script>
-
-
-<!-- Initiate streaming of dataset into harp.gl map -->
-<script type="text/javascript"
-src="{{ url_for('static', filename='stream_cjc.js') }}"></script>
-
-
-{% endblock %}

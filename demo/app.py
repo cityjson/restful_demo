@@ -101,7 +101,7 @@ def items(dataset):
     cm = cm.get_subset_ids(theids, exclude=False)
     re_f = request.args.get('f', None)
     if re_f == 'html' or re_f is None:
-        return render_template("items.html", datasetname=dataset, jcm=cm.j['CityObjects'])
+        return render_template("items.html", datasetname=dataset, jcm=cm.j)
     elif re_f == 'json':
         return cm.j
     else:
@@ -165,7 +165,7 @@ def getcm(filename):
 def visualise(dataset):
     for each in jindex['collections']:
         if each['id'] == dataset:
-            return render_template("visualise.html", dataset = dataset)
+            return render_template("visualise.html", stream = dataset)
     return JINVALIDFORMAT
 
 
