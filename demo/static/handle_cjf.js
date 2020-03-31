@@ -128,48 +128,43 @@ async function handleNewFeature(feature) {
 async function loadCityObjects(featureName) {
 
    var json = featureDict[featureName]
-  
-   // Normalise coordinates
-   if ("transform" in json == false){
-    // If diag hasn't been calculated, we're not streaming -> three.js normalisation
-     if (diag == 0){
-      var normGeom = new THREE.Geometry()
-      for (var i = 0; i < json.vertices.length; i++) {
-        var point = new THREE.Vector3(
-          json.vertices[i][0],
-          json.vertices[i][1],
-          json.vertices[i][2]
-        );
-        normGeom.vertices.push(point)
-      }
-      normGeom.normalize()
-    
-      for (var i = 0; i < json.vertices.length; i++) {
-        json.vertices[i][0] = normGeom.vertices[i].x;
-        json.vertices[i][1] = normGeom.vertices[i].y;
-        json.vertices[i][2] = normGeom.vertices[i].z;
-      }
+  var scale = [1, 1, 1];
+  var translate = [0, 0, 0];
+
+   if ("transform" in json){
+    scale = json["transform"]["scale"];
+    translate = json["transform"]["translate"];
+    console.log('Dataset has "transform"! This is not conform the specs.');
+   }
+
+  // Normalise coordinates
+  // If diag hasn't been calculated, we're not streaming -> three.js normalisation
+    if (diag == 0){
+    var normGeom = new THREE.Geometry()
+    for (var i = 0; i < json.vertices.length; i++) {
+      var point = new THREE.Vector3(
+        json.vertices[i][0] * scale[0] + translate[0],
+        json.vertices[i][1] * scale[1] + translate[1],
+        json.vertices[i][2] * scale[2] + translate[2]
+      );
+      normGeom.vertices.push(point)
     }
-    // Otherwise use bbox-based normalisation. It doesn't work the same, model will seem off-centered 
-    // (y and z are mostly negative?)
-    // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
-    else {
-      for (var i = 0; i < json.vertices.length; i++) {
-        json.vertices[i][0] = ((json.vertices[i][0] - bbox[0]) / diag) * 2 - 1
-        json.vertices[i][1] = ((json.vertices[i][1] - bbox[1]) / diag) * 2 - 1
-        json.vertices[i][2] = ((json.vertices[i][2] - bbox[2]) / diag) * 2 - 1
-      }
+    normGeom.normalize()
+  
+    for (var i = 0; i < json.vertices.length; i++) {
+      json.vertices[i][0] = normGeom.vertices[i].x;
+      json.vertices[i][1] = normGeom.vertices[i].y;
+      json.vertices[i][2] = normGeom.vertices[i].z;
     }
   }
-  // Still have to handle transform
-  else{
-    var scale = json["transform"]["scale"];
-    var translate = json["transform"]["translate"];
-
+  // Otherwise use bbox-based normalisation. It doesn't work the same, model will seem off-centered 
+  // (y and z are mostly negative?)
+  // https://stackoverflow.com/questions/3862096/2d-coordinate-normalization
+  else {
     for (var i = 0; i < json.vertices.length; i++) {
-      json.vertices[i][0] = ((json.vertices[i][0] * scale[0] + translate[0] - bbox[0]) / diag) * 2 - 1
-      json.vertices[i][1] = ((json.vertices[i][1] * scale[1] + translate[1] - bbox[1]) / diag) * 2 - 1
-      json.vertices[i][2] = ((json.vertices[i][2] * scale[2] + translate[2] - bbox[2]) / diag) * 2 - 1
+      json.vertices[i][0] = ((json.vertices[i][0] - bbox[0]) / diag) * 2 - 1
+      json.vertices[i][1] = ((json.vertices[i][1] - bbox[1]) / diag) * 2 - 1
+      json.vertices[i][2] = ((json.vertices[i][2] - bbox[2]) / diag) * 2 - 1
     }
   }
 
@@ -319,7 +314,7 @@ async function loadCityObjects(featureName) {
        }
        //get normal of these points
        var normal = await get_normal_newell(pList)
- 
+       
        //convert to 2d (for triangulation)
        var pv = []
        for (var j = 0; j < pList.length; j++) {
@@ -327,7 +322,7 @@ async function loadCityObjects(featureName) {
          pv.push(re.x)
          pv.push(re.y)
        }
- 
+
        //triangulate
        var tr = await earcut(pv, null, 2);
 
