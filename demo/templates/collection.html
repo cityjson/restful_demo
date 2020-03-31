@@ -4,7 +4,7 @@
 <div class="section bg-gray">
   <ul class="breadcrumb">
     <li class="breadcrumb-item">
-      <a href="{{ url_for('root') }}">Home</a>
+      <a href="{{ url_for('root') }}">/ home</a>
     </li>
     <li class="breadcrumb-item">
       <a href="{{ url_for('collections') }}">collections</a>
@@ -22,7 +22,11 @@
 
 <h3>View</h3>
 
-<p><a href="{{ url_for('collections') }}{{ dataset['id'] }}/items">Browse though the features of the dataset</a></p>
+<p><a href="{{ url_for('collections') }}{{ dataset['id'] }}/items">Browse though the features of the dataset (HTML page)</a></p>
+
+<h3>Links</h3>
+
+<p><a href="{{ url_for('collections') }}{{ dataset['id'] }}/items/?f=json">Get the CityJSON file (~FeatureCollection)</a></p>
 
 
 {% endblock %}

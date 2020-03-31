@@ -1,29 +1,24 @@
 {
   "collections": [
     {
-      "title": "Part of open dataset of The Hague; buildings+terrain", 
-      "id": "denhaag", 
-      "itemType": "feature"
-    }, 
+      "id": "vienna",
+      "itemType": "feature",
+      "title": "LoD2 model of Vienna"
+    },
     {
-      "title": "Sample dataset part of Delft (from 3dfier)", 
-      "id": "delft", 
-      "itemType": "feature"
+      "id": "montreal",
+      "itemType": "feature",
+      "title": "Montreal LoD2 open dataset"
     },
-	{
-      "title": "CityJSONCollection example of Delft", 
-      "id": "delft_collection", 
-      "itemType": "feature"
+    {
+      "id": "denhaag",
+      "itemType": "feature",
+      "title": "Part of open dataset of The Hague; buildings+terrain"
     },
-	{
-      "title": "Dataset of Montréal", 
-      "id": "montreal", 
-      "itemType": "feature"
-    },
-		{
-      "title": "CityJSONCollection example of Montréal", 
-      "id": "montreal_collection", 
-      "itemType": "feature"
+    {
+      "id": "delft",
+      "itemType": "feature",
+      "title": "Sample dataset part of Delft (from 3dfier)"
     }
   ]
 }

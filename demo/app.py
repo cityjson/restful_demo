@@ -101,7 +101,7 @@ def items(dataset):
     cm = cm.get_subset_ids(theids, exclude=False)
     re_f = request.args.get('f', None)
     if re_f == 'html' or re_f is None:
-        return render_template("items.html", datasetname=dataset, jcm=cm.j)
+        return render_template("items.html", datasetname=dataset, jcm=cm.j, limit=re_limit, offset=re_offset)
     elif re_f == 'json':
         return cm.j
     else:
