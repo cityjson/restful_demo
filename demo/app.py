@@ -213,7 +213,7 @@ def collection_stream(dataset):
             f['type'] = 'CityJSONFeature'
             f['id'] = featureID
             yield '{}\n'.format(f)
-    return Response(generate(), mimetype='application/json')
+    return Response(generate(), mimetype='text/plain')
 
 
 
