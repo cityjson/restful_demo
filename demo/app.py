@@ -1,5 +1,5 @@
 
-from flask import Flask, escape, url_for, render_template, request
+from flask import Flask, escape, url_for, render_template, request, Response
 from cjio import cityjson
 import json
 import os
@@ -193,6 +193,28 @@ def stream():
     f.close()
             
     return app.response_class(generate(), mimetype='application/json')
+
+@app.route('/collections/<dataset>/stream/')
+def collection_stream(dataset):
+    #-- fetch the dataset, invalid if not found
+    cm = getcm(dataset)
+    if cm == None:
+        return JINVALIDCOLLECTION
+    # line-delimited JSON generator
+    def generate():    
+        for featureID in cm.j["CityObjects"]:
+            f = cm.get_subset_ids([featureID], exclude=False).j
+            if 'metadata' in f:
+                del f['metadata']
+            if 'version' in f:
+                del f['version']
+            if 'extensions' in f:
+                del f['extensions']
+            f['type'] = 'CityJSONFeature'
+            f['id'] = featureID
+            yield '{}\n'.format(f)
+    return Response(generate(), mimetype='application/json')
+
 
 
 # @app.route('/<filename>/download/')
