@@ -212,7 +212,8 @@ def collection_stream(dataset):
             s = json.dumps(f)
             s += "\n"
             yield s
-    return Response(generate(), mimetype='text/plain')
+    return Response(generate(), mimetype='application/json-seq')
+    # return Response(generate(), mimetype='text/plain')
 
 
 
