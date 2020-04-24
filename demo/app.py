@@ -169,30 +169,27 @@ def visualise(dataset):
     return JINVALIDFORMAT
 
 
-@app.route('/stream/', methods=['GET'])
-def stream():
-    dataset = request.args.get('dataset', None)
-    f = open(PATHDATASETS + dataset + ".json", "r")
-    cj = json.loads(f.read())
+# @app.route('/stream/', methods=['GET'])
+# def stream():
+#     dataset = request.args.get('dataset', None)
+#     f = open(PATHDATASETS + dataset + ".json", "r")
+#     cj = json.loads(f.read())
     
-    # line-delimited JSON generator
-    def generate():
-        if cj['type'] == "CityJSONCollection":
-            for k, v in cj.items():
-                if k == "features":
-                    for feature in cj[k]:
-                        feature = str(feature)
-                        yield '{}\n'.format(feature)
-                else:
-                    yield '{}\n'.format({k: v})
-        elif cj['type'] == "CityJSON":
-            cm = str(cj)
-            yield '{}\n'.format(cm)
-            
-            
-    f.close()
-            
-    return app.response_class(generate(), mimetype='application/json')
+#     # line-delimited JSON generator
+#     def generate():
+#         if cj['type'] == "CityJSONCollection":
+#             for k, v in cj.items():
+#                 if k == "features":
+#                     for feature in cj[k]:
+#                         feature = str(feature)
+#                         yield '{}\n'.format(feature)
+#                 else:
+#                     yield '{}\n'.format({k: v})
+#         elif cj['type'] == "CityJSON":
+#             cm = str(cj)
+#             yield '{}\n'.format(cm)
+#     f.close()
+#     return app.response_class(generate(), mimetype='application/json')
 
 @app.route('/collections/<dataset>/stream/')
 def collection_stream(dataset):
