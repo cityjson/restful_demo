@@ -210,9 +210,11 @@ def collection_stream(dataset):
                 del f['version']
             if 'extensions' in f:
                 del f['extensions']
-            f['type'] = 'CityJSONFeature'
-            f['id'] = featureID
-            yield '{}\n'.format(f)
+            f["type"] = "CityJSONFeature"
+            f["id"] = featureID
+            s = json.dumps(f)
+            s += "\n"
+            yield s
     return Response(generate(), mimetype='text/plain')
 
 
