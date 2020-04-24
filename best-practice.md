@@ -78,15 +78,6 @@ This is up to discussion.
 If many Features must be returned, like all objects inside a bbox, then a CityJSON is returned (equivalent to a FeatureCollection.
 
 
-### Streaming
-
-The same hack as used by everyone: [Line-delimited JSON](https://en.m.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON): one JSON object per line, that is separated by a CR.
-
-Called [GeoJSON Text Sequences](https://tools.ietf.org/html/rfc8142) also.
-
-So each line can be either a CityJSON or a CityJSONFeature, inline with OGCAPIF specs.
-
-
 ### Demo
 
 In `/demo/` there's a simple [Flask](https://palletsprojects.com/p/flask/) server that can be run locally, and [cjio](https://github.com/cityjson/cjio) must be installed too (watch out, the "develop" branch!) to be run.
@@ -96,3 +87,17 @@ There are a few CityJSON datasets in one folder, and then the behaviour of [pyge
 It's not finished (OpenAPI and conformance are TODO), but it works and shows the idea are implementable.
 
 [-->demo is hosted online for a few users](http://hugoledoux.pythonanywhere.com/) (if 1000s of you go there at the same time it might not work 😬)
+
+
+### Streaming
+
+The same hack as used by everyone: [Line-delimited JSON](https://en.m.wikipedia.org/wiki/JSON_streaming#Line-delimited_JSON): one JSON object per line, that is separated by a CR.
+There's a standard for it too: https://tools.ietf.org/html/rfc7464
+
+Called [GeoJSON Text Sequences](https://tools.ietf.org/html/rfc8142) also.
+
+So each line can be either a CityJSON or a CityJSONFeature, inline with OGCAPIF specs.
+
+In the demo, if you add `/stream` after a collection, you get a stream of `CityJSONFeature` (type is `json-seq`), eg:
+
+http://hugoledoux.pythonanywhere.com/collections/delft/stream/
