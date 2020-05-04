@@ -1,7 +1,8 @@
 
-# CityJSON & OGC API -- Features (formely known as WFS3)
 
-Here are some thoughts, and a concrete proposal, on making CityJSON "work" with [OGC API--Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) ([GitHub repo](https://github.com/opengeospatial/ogcapi-features)).
+# CityJSON + RESTful + streaming 
+
+Here are some thoughts, and a concrete proposal, on making CityJSON "work" with [OGC API--Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) ([GitHub repo](https://github.com/opengeospatial/ogcapi-features)), which is formely known as WFS3.
 
 The most frequent criticism related to CityJSON is "yeah but we cannot *stream* it, and OGCAPIF is impossible, look at the global list of vertices!".
 

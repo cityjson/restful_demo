@@ -1,4 +1,4 @@
-# cityjson_ogcapi
+# CityJSON + RESTful access + streaming
 
 
 ## demo online
