@@ -13,12 +13,15 @@ j["collections"] = []
 
 for cm in cms:
     ji = {}
-    ji['id'] = cm[:-5]
+    ji['id'] = cm[:-10]
     jcm = json.loads(open(cm).read())
 
 
     ji['itemType'] = "feature"
-    ji['title'] = jcm['metadata']['datasetTitle']
+    if 'metadata' in jcm and 'title' in jcm['metadata']: 
+        ji['title'] = jcm['metadata']['title']
+    else:
+        ji['title'] = ""
     j['collections'].append(ji)
 
 f = open("index.json", "w")

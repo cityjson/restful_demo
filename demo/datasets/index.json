@@ -1,6 +1,16 @@
 {
   "collections": [
     {
+      "id": "tudelft",
+      "itemType": "feature",
+      "title": "3D BAG: Up-to-date, open 3D building models of the Netherlands Tile 5910"
+    },
+    {
+      "id": "denhaag",
+      "itemType": "feature",
+      "title": "Part of open dataset of The Hague; buildings+terrain"
+    },
+    {
       "id": "vienna",
       "itemType": "feature",
       "title": "LoD2 model of Vienna"
@@ -9,16 +19,6 @@
       "id": "montreal",
       "itemType": "feature",
       "title": "Montreal LoD2 open dataset"
-    },
-    {
-      "id": "denhaag",
-      "itemType": "feature",
-      "title": "Part of open dataset of The Hague; buildings+terrain"
-    },
-    {
-      "id": "delft",
-      "itemType": "feature",
-      "title": "Sample dataset part of Delft (from 3dfier)"
     }
   ]
 }
