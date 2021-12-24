@@ -2,7 +2,7 @@
 import requests
 import json
 
-r = requests.get('http://localhost:5000/collections/denhaag/stream/', stream=True)
+r = requests.get('http://localhost:5000/collections/tudelft/stream/', stream=True)
 
 count = 0
 for line in r.iter_lines():
