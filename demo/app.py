@@ -154,7 +154,7 @@ def not_found(error):
     return render_template('404.html'), 404
 
 def getcm(filename):
-    p = PATHDATASETS + filename + '.json'
+    p = PATHDATASETS + filename + '.city.json'
     if os.path.isfile(p) == False:
         return None
     f = open(p)
