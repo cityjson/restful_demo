@@ -27,7 +27,7 @@ Called [GeoJSON Text Sequences](https://tools.ietf.org/html/rfc8142) also.
 
 In the demo, if you add `/stream` after a collection, you get a stream of `CityJSONFeature` (type is `json-seq`), with the first line containing the metadata and other data useful for the whole data (`cjio myfile.city.json export --format jsonl` is used):
 
-http://hugoledoux.pythonanywhere.com/collections/tudelft/stream/
+http://cityjson.pythonanywhere.com/collections/tudelft/stream/
 
 
 ## Demo online
