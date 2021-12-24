@@ -15,7 +15,7 @@ There are a few CityJSON datasets in one folder, and then the behaviour of [pyge
 
 It's not finished (OpenAPI and conformance are TODO), but it works and shows the idea are implementable.
 
-[-->demo is hosted online for a few users](http://hugoledoux.pythonanywhere.com/) (if 1000s of you go there at the same time it might not work 😬)
+[-->demo is hosted online for a few users](http://cityjson.pythonanywhere.com/) (if 1000s of you go there at the same time it might not work 😬)
 
 
 ## Streaming
@@ -32,7 +32,7 @@ http://hugoledoux.pythonanywhere.com/collections/tudelft/stream/
 
 ## Demo online
 
-[-->demo](http://hugoledoux.pythonanywhere.com/)
+[-->demo](http://cityjson.pythonanywhere.com/)
 
 
 ## To run locally
